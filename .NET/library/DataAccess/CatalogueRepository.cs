@@ -60,5 +60,24 @@ namespace OneBeyondApi.DataAccess
                 return await list.ToListAsync();
             }
         }
+
+        public BookStock BorrowerReturnOneBookStock(ReturnBookRequest returnBookRequest)
+        {
+
+            using (var context = new LibraryContext())
+            {
+                var bookStockGuid = new Guid(returnBookRequest.BookStockId);
+                var catalogue = context.Catalogue.SingleOrDefault(x => x.Id == bookStockGuid);
+
+                if (catalogue != null)
+                {
+                    catalogue.OnLoanTo = null;
+                    catalogue.LoanEndDate = null;
+                    return context.Update(catalogue).Entity;
+                }
+            }
+
+            return null;
+        }
     }
 }

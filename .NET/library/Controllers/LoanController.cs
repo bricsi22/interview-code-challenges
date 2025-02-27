@@ -29,9 +29,9 @@ namespace OneBeyondApi.Controllers
 
         [HttpPost]
         [Route("ReturnBook")]
-        public Guid ReturnBook(BookStock bookStock)
+        public BookStock ReturnBook(ReturnBookRequest returnBookRequest)
         {
-            return _loanService.RemoveLoan(bookStock);
+            return _loanService.BorrowerReturnOneBookStock(returnBookRequest);
         }
     }
 }

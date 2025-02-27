@@ -37,8 +37,8 @@ public class LoanService : ILoanService
         return result;
     }
 
-    public Guid RemoveLoan(BookStock bookStock)
+    public BookStock BorrowerReturnOneBookStock(ReturnBookRequest returnBookRequest)
     {
-        throw new NotImplementedException();
+        return _catalogueRepository.BorrowerReturnOneBookStock(returnBookRequest);
     }
 }
