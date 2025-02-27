@@ -19,6 +19,10 @@ namespace OneBeyondApi
             {
                 Name = "Margaret Jones"
             };
+            var josephAlbahari = new Author
+            {
+                Name = "Joseph Albahari"
+            };
 
             var clayBook = new Book
             {
@@ -44,6 +48,14 @@ namespace OneBeyondApi
                 ISBN = "3134324111"
             };
 
+            var csharpInANutShell = new Book
+            {
+                Name = "C# in a Nutshell",
+                Format = BookFormat.Paperback,
+                Author = josephAlbahari,
+                ISBN = "1098147448"
+            };
+
             var daveSmith = new Borrower
             {
                 Name = "Dave Smith",
@@ -54,6 +66,12 @@ namespace OneBeyondApi
             {
                 Name = "Liana James",
                 EmailAddress = "liana@gmail.com"
+            };
+
+            var richardBaldauf = new Borrower
+            {
+                Name = "Richard Baldauf",
+                EmailAddress = "baldauf.richard22@gmail.com"
             };
 
             var bookOnLoanUntilToday = new BookStock {
@@ -83,6 +101,13 @@ namespace OneBeyondApi
                 LoanEndDate = null
             };
 
+            var csharpInNutshellBookStock = new BookStock
+            {
+                Book = csharpInANutShell,
+                OnLoanTo = richardBaldauf,
+                LoanEndDate = DateTime.Now.Date.AddDays(60)
+            };
+
             using (var context = new LibraryContext())
             {
                 context.Authors.Add(ernestMonkjack);
@@ -101,6 +126,7 @@ namespace OneBeyondApi
                 context.Catalogue.Add(bookNotOnLoan);
                 context.Catalogue.Add(bookOnLoanUntilNextWeek);
                 context.Catalogue.Add(rustBookStock);
+                context.Catalogue.Add(csharpInNutshellBookStock);
 
                 context.SaveChanges();
 

@@ -15,7 +15,7 @@ namespace OneBeyondApi.Controllers
         public CatalogueController(ILogger<CatalogueController> logger, ICatalogueRepository catalogueRepository)
         {
             _logger = logger;
-            _catalogueRepository = catalogueRepository;   
+            _catalogueRepository = catalogueRepository;
         }
 
         [HttpGet]
@@ -27,9 +27,9 @@ namespace OneBeyondApi.Controllers
 
         [HttpPost]
         [Route("SearchCatalogue")]
-        public IList<BookStock> Post(CatalogueSearch search)
+        public async Task<IEnumerable<BookStock>> Post(CatalogueSearch search)
         {
-            return _catalogueRepository.SearchCatalogue(search);
+            return await _catalogueRepository.SearchCatalogue(search);
         }
     }
 }
