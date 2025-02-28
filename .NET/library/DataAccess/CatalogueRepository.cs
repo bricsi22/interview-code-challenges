@@ -29,10 +29,34 @@ namespace OneBeyondApi.DataAccess
         {
             using (var context = new LibraryContext())
             {
-                var bookStockGuide = new Guid(bookStockId);
+                var bookStockGuid = new Guid(bookStockId);
                 var bookStock = context.Catalogue
                     .Include(x => x.OnLoanTo)
-                    .SingleOrDefault(x => x.Id == bookStockGuide);
+                    .SingleOrDefault(x => x.Id == bookStockGuid);
+
+                return bookStock;
+            }
+        }
+
+        public async Task<BookStock> GetBookStockByBookTitle(string bookTitle)
+        {
+            using (var context = new LibraryContext())
+            {
+                var bookStock = await context.Catalogue
+                    .Include(x => x.Book)
+                    .SingleOrDefaultAsync(x => x.Book.Title == bookTitle);
+
+                return bookStock;
+            }
+        }
+
+        public async Task<BookStock> GetBookStockByBookId(Guid bookId)
+        {
+            using (var context = new LibraryContext())
+            {
+                var bookStock = await context.Catalogue
+                    .Include(x => x.Book)
+                    .SingleOrDefaultAsync(x => x.Book.Id == bookId);
 
                 return bookStock;
             }
@@ -56,7 +80,7 @@ namespace OneBeyondApi.DataAccess
                     }
 
                     if (!string.IsNullOrEmpty(search.BookName)) {
-                        list = list.Where(x => x.Book.Name.Contains(search.BookName));
+                        list = list.Where(x => x.Book.Title.Contains(search.BookName));
                     }
 
                     if (search.ActiveLoansOnly.HasValue && search.ActiveLoansOnly.Value)

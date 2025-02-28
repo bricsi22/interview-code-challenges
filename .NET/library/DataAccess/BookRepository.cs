@@ -22,7 +22,7 @@ namespace OneBeyondApi.DataAccess
             using (var context = new LibraryContext())
             {
                 var book = await context.Books
-                    .Where(b => b.Name == title)
+                    .Where(b => b.Title == title)
                     .SingleOrDefaultAsync();
                 return book;
             }

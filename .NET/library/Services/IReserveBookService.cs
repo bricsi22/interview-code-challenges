@@ -4,5 +4,5 @@ namespace OneBeyondApi.Services;
 
 public interface IReserveBookService
 {
-    public Task<bool> ReserveBook(ReserveBookRequest reserveBookRequest);
+    public Task<ReserveBookResponse> ReserveBook(ReserveBookRequest reserveBookRequest);
 }

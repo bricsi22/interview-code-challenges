@@ -32,7 +32,7 @@ public class LoanService : ILoanService
         var result = new List<BorrowerWithLoanedBooks>();
         foreach (var catalogueResult in catalogueResults.GroupBy(x => x.OnLoanTo))
         {
-            var listOfBooks = catalogueResult.Select(x => x.Book.Name);
+            var listOfBooks = catalogueResult.Select(x => x.Book.Title);
             result.Add(new BorrowerWithLoanedBooks
             {
                 Id = catalogueResult.Key.Id,

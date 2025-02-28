@@ -7,31 +7,64 @@ namespace OneBeyondApi.Services;
 public class ReserveBookService : IReserveBookService
 {
     private readonly IBookRepository _bookRepository;
+    private readonly ILogger<ReserveBookService> _logger;
+    private readonly ICatalogueRepository _catalogueRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public ReserveBookService(IBookRepository bookRepository)
+    public ReserveBookService(
+        IBookRepository bookRepository,
+        ILogger<ReserveBookService> logger,
+        ICatalogueRepository catalogueRepository,
+        IDateTimeProvider dateTimeProvider)
     {
         _bookRepository = bookRepository;
+        _logger = logger;
+        _catalogueRepository = catalogueRepository;
+        _dateTimeProvider = dateTimeProvider;
     }
-    public async Task<bool> ReserveBook(ReserveBookRequest reserveBookRequest)
+    public async Task<ReserveBookResponse> ReserveBook(ReserveBookRequest reserveBookRequest)
     {
-        var book = await _bookRepository.GetBookByTitle(reserveBookRequest.BookTitle);
-        if (book != null && book.Preserved == false)
+        var bookStock = await _catalogueRepository.GetBookStockByBookTitle(reserveBookRequest.BookTitle);
+        var reserveBookResponse = new ReserveBookResponse
         {
-            bool reserveSuccess;
-            try
+            BookReserved = false
+        };
+
+        if (bookStock != null)
+        {
+            if (bookStock.LoanEndDate.HasValue)
             {
-                book.Preserved = true;
-                _bookRepository.UpdateBook(book);
-                reserveSuccess = true;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                reserveSuccess = false;
+                if (bookStock.Book.Preserved == false)
+                {
+                    try
+                    {
+                        bookStock.Book.Preserved = true;
+                        _bookRepository.UpdateBook(bookStock.Book);
+                        reserveBookResponse.BookReserved = true;
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        _logger.LogError("Book already modified by someone else, cannot reserve it.");
+                        reserveBookResponse.BookReserved = false;
+                    }
+                }
+                
+
+                if (reserveBookResponse.BookReserved == false)
+                {
+                    if (bookStock.LoanEndDate.Value < _dateTimeProvider.GetCurrentUtcDate())
+                    {
+                        reserveBookResponse.NextTimeAvailable = _dateTimeProvider.GetCurrentUtcDate();
+                    }
+                    else
+                    {
+                        reserveBookResponse.NextTimeAvailable = bookStock.LoanEndDate.Value.AddDays(1);
+                    }
+                }
             }
 
-            return reserveSuccess;
         }
 
-        return false;
+        return reserveBookResponse;
     }
 }

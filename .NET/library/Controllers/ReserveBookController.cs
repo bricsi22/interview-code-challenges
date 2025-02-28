@@ -21,7 +21,7 @@ namespace OneBeyondApi.Controllers
 
         [HttpPost]
         [Route("ReserveBook")]
-        public async Task<bool> ReserveBook(ReserveBookRequest reserveBookRequest)
+        public async Task<ReserveBookResponse> ReserveBook(ReserveBookRequest reserveBookRequest)
         {
             _logger.LogDebug("Reserve endpoint called.");
             return await _reserveBookService.ReserveBook(reserveBookRequest);

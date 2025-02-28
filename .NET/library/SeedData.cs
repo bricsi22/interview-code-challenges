@@ -23,10 +23,14 @@ namespace OneBeyondApi
             {
                 Name = "Joseph Albahari"
             };
+            var robertCMartin = new Author
+            {
+                Name = "Robert C. Martin"
+            };
 
             var clayBook = new Book
             {
-                Name = "The Importance of Clay",
+                Title = "The Importance of Clay",
                 Format = BookFormat.Paperback,
                 Author = ernestMonkjack,
                 ISBN = "1305718181",
@@ -36,7 +40,7 @@ namespace OneBeyondApi
 
             var agileBook = new Book
             {
-                Name = "Agile Project Management - A Primer",
+                Title = "Agile Project Management - A Primer",
                 Format = BookFormat.Hardback,
                 Author = sarahKennedy,
                 ISBN = "1293910102",
@@ -46,7 +50,7 @@ namespace OneBeyondApi
 
             var rustBook = new Book
             {
-                Name = "Rust Development Cookbook",
+                Title = "Rust Development Cookbook",
                 Format = BookFormat.Paperback,
                 Author = margaretJones,
                 ISBN = "3134324111",
@@ -56,13 +60,24 @@ namespace OneBeyondApi
 
             var csharpInANutShell = new Book
             {
-                Name = "C# in a Nutshell",
+                Title = "C# in a Nutshell",
                 Format = BookFormat.Paperback,
                 Author = josephAlbahari,
                 ISBN = "1098147448",
                 Preserved = false,
                 RowVersion = new byte[] { 1 }
             };
+
+            var cleanCode = new Book
+            {
+                Title = "Clean Code: A Handbook of Agile Software Craftsmanship",
+                Format = BookFormat.Paperback,
+                Author = robertCMartin,
+                ISBN = "9780132350884",
+                Preserved = false,
+                RowVersion = new byte[] { 1 }
+            };
+            
 
             var daveSmith = new Borrower
             {
@@ -117,26 +132,38 @@ namespace OneBeyondApi
                 LoanEndDate = DateTime.Now.Date.AddDays(-5)
             };
 
+            var cleanCodeBookStock = new BookStock
+            {
+                Book = cleanCode,
+                OnLoanTo = richardBaldauf,
+                LoanEndDate = DateTime.Now.Date.AddDays(10)
+            };
+
             using (var context = new LibraryContext())
             {
                 context.Authors.Add(ernestMonkjack);
                 context.Authors.Add(sarahKennedy);
                 context.Authors.Add(margaretJones);
+                context.Authors.Add(josephAlbahari);
+                context.Authors.Add(robertCMartin);
 
 
                 context.Books.Add(clayBook);
                 context.Books.Add(agileBook);
                 context.Books.Add(rustBook);
                 context.Books.Add(csharpInANutShell);
+                context.Books.Add(cleanCode);
 
                 context.Borrowers.Add(daveSmith);
                 context.Borrowers.Add(lianaJames);
+                context.Borrowers.Add(richardBaldauf);
 
                 context.Catalogue.Add(bookOnLoanUntilToday);
                 context.Catalogue.Add(bookNotOnLoan);
                 context.Catalogue.Add(bookOnLoanUntilNextWeek);
                 context.Catalogue.Add(rustBookStock);
                 context.Catalogue.Add(csharpInNutshellBookStock);
+                context.Catalogue.Add(cleanCodeBookStock);
 
                 context.SaveChanges();
 
