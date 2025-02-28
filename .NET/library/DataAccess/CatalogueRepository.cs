@@ -25,6 +25,19 @@ namespace OneBeyondApi.DataAccess
             }
         }
 
+        public BookStock GetBookStock(string bookStockId)
+        {
+            using (var context = new LibraryContext())
+            {
+                var bookStockGuide = new Guid(bookStockId);
+                var bookStock = context.Catalogue
+                    .Include(x => x.OnLoanTo)
+                    .SingleOrDefault(x => x.Id == bookStockGuide);
+
+                return bookStock;
+            }
+        }
+
         public async Task<IEnumerable<BookStock>> SearchCatalogue(CatalogueSearch search)
         {
             using (var context = new LibraryContext())
@@ -61,23 +74,19 @@ namespace OneBeyondApi.DataAccess
             }
         }
 
-        public BookStock BorrowerReturnOneBookStock(ReturnBookRequest returnBookRequest)
+        public BookStock BorrowerReturnOneBookStock(BookStock bookStock)
         {
+            if (bookStock == null)
+            {
+                return null;
+            }
 
             using (var context = new LibraryContext())
             {
-                var bookStockGuid = new Guid(returnBookRequest.BookStockId);
-                var catalogue = context.Catalogue.SingleOrDefault(x => x.Id == bookStockGuid);
-
-                if (catalogue != null)
-                {
-                    catalogue.OnLoanTo = null;
-                    catalogue.LoanEndDate = null;
-                    return context.Update(catalogue).Entity;
-                }
+                bookStock.OnLoanTo = null;
+                bookStock.LoanEndDate = null;
+                return context.Update(bookStock).Entity;
             }
-
-            return null;
         }
     }
 }

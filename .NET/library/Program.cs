@@ -1,6 +1,7 @@
 using OneBeyondApi;
 using OneBeyondApi.DataAccess;
 using OneBeyondApi.Services;
+using OneBeyondApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +10,11 @@ builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBorrowerRepository, BorrowerRepository>();
 builder.Services.AddScoped<ICatalogueRepository, CatalogueRepository>();
-builder.Services.AddScoped<ILoanService, LoanService>();
-builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+builder.Services.AddScoped<IFineRepository, FineRepository>();
+builder.Services.AddTransient<ILoanService, LoanService>();
+builder.Services.AddTransient<IFineService, FineService>();
+builder.Services.AddTransient<IDateTimeProvider, DateTimeProvider>();
+builder.Services.AddTransient<ReturnBookValidator>();
 
 // Seed test data into memory DB
 SeedData.SetInitialData();

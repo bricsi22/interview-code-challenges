@@ -1,15 +1,23 @@
 ﻿using OneBeyondApi.DataAccess;
 using OneBeyondApi.Model;
+using OneBeyondApi.Validators;
 
 namespace OneBeyondApi.Services;
 
 public class LoanService : ILoanService
 {
     private readonly ICatalogueRepository _catalogueRepository;
+    private readonly ReturnBookValidator _returnBookValidator;
+    private readonly IFineService _fineService;
 
-    public LoanService(ICatalogueRepository catalogueRepository)
+    public LoanService(
+        ICatalogueRepository catalogueRepository,
+        ReturnBookValidator returnBookValidator,
+        IFineService fineService)
     {
         _catalogueRepository = catalogueRepository;
+        _returnBookValidator = returnBookValidator;
+        _fineService = fineService;
     }
 
     public async Task<IEnumerable<BorrowerWithLoanedBooks>> GetLoans()
@@ -39,6 +47,20 @@ public class LoanService : ILoanService
 
     public BookStock BorrowerReturnOneBookStock(ReturnBookRequest returnBookRequest)
     {
-        return _catalogueRepository.BorrowerReturnOneBookStock(returnBookRequest);
+        var bookStock = _catalogueRepository.GetBookStock(returnBookRequest.BookStockId);
+        var returnBookValidationResult = _returnBookValidator.Validate(bookStock);
+        if (returnBookValidationResult.IsValid)
+        {
+            return _catalogueRepository.BorrowerReturnOneBookStock(bookStock);
+        }
+        else
+        {
+            if (bookStock.LoanEndDate.HasValue && bookStock.OnLoanTo != null)
+            {
+                _fineService.AddFineForBorrower(bookStock.LoanEndDate.Value, bookStock.OnLoanTo);
+            }
+        }
+
+        return bookStock;
     }
 }
