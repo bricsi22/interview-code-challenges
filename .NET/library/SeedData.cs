@@ -29,7 +29,9 @@ namespace OneBeyondApi
                 Name = "The Importance of Clay",
                 Format = BookFormat.Paperback,
                 Author = ernestMonkjack,
-                ISBN = "1305718181"
+                ISBN = "1305718181",
+                Preserved = false,
+                RowVersion = new byte[] { 1 }
             };
 
             var agileBook = new Book
@@ -37,7 +39,9 @@ namespace OneBeyondApi
                 Name = "Agile Project Management - A Primer",
                 Format = BookFormat.Hardback,
                 Author = sarahKennedy,
-                ISBN = "1293910102"
+                ISBN = "1293910102",
+                Preserved = false,
+                RowVersion = new byte[] { 1 }
             };
 
             var rustBook = new Book
@@ -45,7 +49,9 @@ namespace OneBeyondApi
                 Name = "Rust Development Cookbook",
                 Format = BookFormat.Paperback,
                 Author = margaretJones,
-                ISBN = "3134324111"
+                ISBN = "3134324111",
+                Preserved = false,
+                RowVersion = new byte[] { 1 }
             };
 
             var csharpInANutShell = new Book
@@ -53,7 +59,9 @@ namespace OneBeyondApi
                 Name = "C# in a Nutshell",
                 Format = BookFormat.Paperback,
                 Author = josephAlbahari,
-                ISBN = "1098147448"
+                ISBN = "1098147448",
+                Preserved = false,
+                RowVersion = new byte[] { 1 }
             };
 
             var daveSmith = new Borrower
@@ -119,6 +127,7 @@ namespace OneBeyondApi
                 context.Books.Add(clayBook);
                 context.Books.Add(agileBook);
                 context.Books.Add(rustBook);
+                context.Books.Add(csharpInANutShell);
 
                 context.Borrowers.Add(daveSmith);
                 context.Borrowers.Add(lianaJames);

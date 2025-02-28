@@ -1,4 +1,5 @@
-﻿using OneBeyondApi.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using OneBeyondApi.Model;
 
 namespace OneBeyondApi.DataAccess
 {
@@ -16,6 +17,16 @@ namespace OneBeyondApi.DataAccess
                 return list;
             }
         }
+        public async Task<Book> GetBookByTitle(string title)
+        {
+            using (var context = new LibraryContext())
+            {
+                var book = await context.Books
+                    .Where(b => b.Name == title)
+                    .SingleOrDefaultAsync();
+                return book;
+            }
+        }
 
         public Guid AddBook(Book book)
         {
@@ -24,6 +35,16 @@ namespace OneBeyondApi.DataAccess
                 context.Books.Add(book);
                 context.SaveChanges();
                 return book.Id;
+            }
+        }
+
+        public Book UpdateBook(Book book)
+        {
+            using (var context = new LibraryContext())
+            {
+                context.Books.Update(book);
+                context.SaveChanges();
+                return book;
             }
         }
     }

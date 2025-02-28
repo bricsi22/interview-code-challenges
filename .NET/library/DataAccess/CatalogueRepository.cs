@@ -46,6 +46,7 @@ namespace OneBeyondApi.DataAccess
                     .Include(x => x.Book)
                     .ThenInclude(x => x.Author)
                     .Include(x => x.OnLoanTo)
+                    .AsNoTracking()
                     .AsQueryable();
 
                 if (search != null)
@@ -85,7 +86,9 @@ namespace OneBeyondApi.DataAccess
             {
                 bookStock.OnLoanTo = null;
                 bookStock.LoanEndDate = null;
-                return context.Update(bookStock).Entity;
+                var entity = context.Update(bookStock).Entity;
+                context.SaveChanges();
+                return entity;
             }
         }
     }

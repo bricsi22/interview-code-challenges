@@ -13,6 +13,7 @@ builder.Services.AddScoped<ICatalogueRepository, CatalogueRepository>();
 builder.Services.AddScoped<IFineRepository, FineRepository>();
 builder.Services.AddTransient<ILoanService, LoanService>();
 builder.Services.AddTransient<IFineService, FineService>();
+builder.Services.AddTransient<IReserveBookService, ReserveBookService>();
 builder.Services.AddTransient<IDateTimeProvider, DateTimeProvider>();
 builder.Services.AddTransient<ReturnBookValidator>();
 
